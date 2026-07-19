@@ -15,7 +15,7 @@
     "react-dom": "19.0.0",
     "@google/generative-ai": "0.24.0",
     "@prisma/client": "6.9.0",
-    "framer-motion": "12.12.2",
+    "framer-motion": "^11.11.11",
     "zustand": "5.0.5",
     "zod": "3.25.67",
     "bcryptjs": "3.0.2",
