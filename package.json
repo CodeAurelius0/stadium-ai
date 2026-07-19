@@ -1,0 +1,40 @@
+{
+  "name": "stadium-ai",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "15.3.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "@google/generative-ai": "0.24.0",
+    "framer-motion": "12.12.2",
+    "zustand": "5.0.5",
+    "zod": "3.25.67",
+    "bcryptjs": "3.0.2",
+    "jsonwebtoken": "9.0.2",
+    "clsx": "2.1.1",
+    "tailwind-merge": "3.3.0",
+    "class-variance-authority": "0.7.1",
+    "lucide-react": "0.511.0",
+    "@radix-ui/react-slot": "1.2.3",
+    "next-themes": "0.4.6",
+    "recharts": "2.15.3"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.0",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "@types/bcryptjs": "3.0.0",
+    "@types/jsonwebtoken": "9.0.9",
+    "typescript": "5.8.3",
+    "tailwindcss": "4.1.11",
+    "@tailwindcss/postcss": "4.1.11",
+    "postcss": "8.5.6"
+  }
+}

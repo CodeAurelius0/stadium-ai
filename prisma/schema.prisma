@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String
+  passwordHash String
+  role         String     @default("FAN") // ADMIN, OPERATOR, VOLUNTEER, FAN
+  avatarUrl    String?
+  language     String     @default("en")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  incidents    Incident[] @relation("ReportedIncidents")
+  assigned     Incident[] @relation("AssignedIncidents")
+
+  @@map("users")
+}
+
+model Stadium {
+  id        String     @id @default(cuid())
+  name      String
+  city      String
+  country   String
+  capacity  Int
+  latitude  Float
+  longitude Float
+  imageUrl  String?
+  zones     Zone[]
+  incidents Incident[]
+  createdAt DateTime   @default(now())
+
+  @@map("stadiums")
+}
+
+model Zone {
+  id           String      @id @default(cuid())
+  stadiumId    String
+  stadium      Stadium     @relation(fields: [stadiumId], references: [id])
+  name         String
+  type         String // GATE, STAND, CONCOURSE, FOOD, RESTROOM, EXIT, MEDICAL, VIP, PARKING
+  capacity     Int
+  currentCount Int         @default(0)
+  x            Float       @default(0)
+  y            Float       @default(0)
+  width        Float       @default(50)
+  height       Float       @default(50)
+  crowdData    CrowdData[]
+  queuePoints  QueuePoint[]
+  createdAt    DateTime    @default(now())
+
+  @@map("zones")
+}
+
+model CrowdData {
+  id             String   @id @default(cuid())
+  zoneId         String
+  zone           Zone     @relation(fields: [zoneId], references: [id])
+  currentCount   Int
+  predictedCount Int      @default(0)
+  riskLevel      String   @default("LOW") // LOW, MEDIUM, HIGH, CRITICAL
+  temperature    Float?
+  humidity       Float?
+  timestamp      DateTime @default(now())
+
+  @@index([zoneId, timestamp])
+  @@map("crowd_data")
+}
+
+model QueuePoint {
+  id                   String   @id @default(cuid())
+  zoneId               String
+  zone                 Zone     @relation(fields: [zoneId], references: [id])
+  name                 String
+  vendor               String?
+  category             String   @default("FOOD") // FOOD, BEVERAGE, RESTROOM, ENTRY, MERCH
+  currentWaitMinutes   Int      @default(0)
+  predictedWaitMinutes Int      @default(0)
+  queueLength          Int      @default(0)
+  isOpen               Boolean  @default(true)
+  timestamp            DateTime @default(now())
+
+  @@index([zoneId, timestamp])
+  @@map("queue_points")
+}
+
+model Incident {
+  id           String    @id @default(cuid())
+  stadiumId    String
+  stadium      Stadium   @relation(fields: [stadiumId], references: [id])
+  reporterId   String?
+  reporter     User?     @relation("ReportedIncidents", fields: [reporterId], references: [id])
+  assigneeId   String?
+  assignee     User?     @relation("AssignedIncidents", fields: [assigneeId], references: [id])
+  type         String // MEDICAL, FIRE, SECURITY, STRUCTURAL, CROWD, OTHER
+  severity     String    @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status       String    @default("REPORTED") // REPORTED, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED
+  title        String
+  description  String
+  aiAssessment String?
+  location     String?
+  latitude     Float?
+  longitude    Float?
+  zoneName     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  resolvedAt   DateTime?
+
+  @@index([stadiumId, status])
+  @@index([severity])
+  @@map("incidents")
+}
+
+model Translation {
+  id             String   @id @default(cuid())
+  sourceLanguage String
+  targetLanguage String
+  sourceText     String
+  translatedText String
+  context        String?
+  createdAt      DateTime @default(now())
+
+  @@map("translations")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  resource  String
+  details   String?
+  ipAddress String?
+  timestamp DateTime @default(now())
+
+  @@index([userId, timestamp])
+  @@map("audit_logs")
+}
