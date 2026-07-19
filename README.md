@@ -12,6 +12,8 @@
 
 </div>
 
+**🌟 Live Demo:** [https://stadium-ai-push.vercel.app](https://stadium-ai-push.vercel.app)
+
 ---
 
 ## 🚀 Overview
