@@ -81,7 +81,7 @@ export function Sidebar() {
           {NAV_ITEMS.map((item) => {
             const Icon = iconMap[item.icon] || LayoutDashboard;
             const isActive = pathname === item.href;
-            const hasAccess = !user?.role || item.roles.includes(user.role as typeof item.roles[number]);
+            const hasAccess = !user?.role || item.roles.includes(user.role as any);
 
             if (!hasAccess) return null;
 
